@@ -72,6 +72,43 @@ Configuration Route Reflector to RR Client
 /routing bgp peer add remote-address=40.40.40.40 remote-as=65000 address-families=vpnv4 update-source=lo0 route-reflect=yes name=to-PE4 tcp-md5-key=mikrotik123
 ```
 
+MPLS Service :
+---------------
+VPLS Configuration
+```
+Example:
+@NODE-A
+/interface vpls add disabled=no name=vpls-l2-circuit-2024 pw-type=tagged-ethernet remote-peer=192.168.0.2 vpls-id=2024:0
+/interface bridge add mtu=1500 name=l2-circuit-2024
+/interface bridge port add bridge=l2-circuit-2024 interface=ether4 bpdu-guard=yes 
+/interface bridge port add bridge=l2-circuit-2024 interface=vpls-l2-circuit-2024 horizon=1
+
+@NODE-B
+/interface vpls add disabled=no name=vpls-l2-circuit-2024 pw-type=tagged-ethernet remote-peer=192.168.0.1 vpls-id=2024:0
+/interface bridge add mtu=1500 name=l2-circuit-2024
+/interface bridge port add bridge=l2-circuit-2024 interface=ether4 bpdu-guard=yes 
+/interface bridge port add bridge=l2-circuit-2024 interface=vpls-l2-circuit-2024 horizon=1
+```
+MPLS L3VPN Configuration
+```
+Example:
+@NODE-A
+/system identity set name=CE1
+/interface bridge add name=VRF-AB mtu=1500 protocol-mode=rstp
+/ip address add address=10.10.10.1/30 interface=VRF-AB
+/interface bridge port add interface=ether3 bridge=VRF-AB bpdu-guard=yes
+/ip route vrf add routing-mark=VRF-AB route-distinguisher=65000:2024 export-route-targets=65000:2024 import-route-targets=65000:2024 interfaces=VRF-AB
+/routing bgp instance vrf add instance=default routing-mark=VRF-AB redistribute-connected=yes redistribute-static=yes 
+
+@NODE-B
+/system identity set name=CE2
+/interface bridge add name=VRF-AB mtu=1500 protocol-mode=rstp
+/ip address add address=20.20.20.1/30 interface=VRF-AB
+/interface bridge port add interface=ether3 bridge=VRF-AB bpdu-guard=yes
+/ip route vrf add routing-mark=VRF-AB route-distinguisher=65000:2024 export-route-targets=65000:2024 import-route-targets=65000:2024 interfaces=VRF-AB
+/routing bgp instance vrf add instance=default routing-mark=VRF-AB redistribute-connected=yes redistribute-static=yes 
+```
+
 
 
 
