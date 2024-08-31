@@ -54,7 +54,7 @@ MPLS LDP and Advertise Neighbor
 /mpls ldp interface add interface=[PORT]
 /mpls ldp interface add interface=[PORT]
 /mpls ldp interface add interface=[PORT]
-/mpls ldp set enabled=yes lsr-id=[IP_LOOPBACK] transport-address=[IP_LOOPBACK]
+/mpls ldp set enabled=yes lsr-id=[IP_LOOPBACK] transport-address=[IP_LOOPBACK]  <- MPLS NEIGHBOR
 ```
 
 Routing BGP Configuration :
