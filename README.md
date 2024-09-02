@@ -109,15 +109,15 @@ Example:
 
 ASBR Example Configuration :
 ---------------
+Virtual Interface
+```
+/interface bonding add mode=802.3ad name=ae6 slaves=ether3 transmit-hash-policy=layer-2-and-3
+```
 IP Address
 ```
 /ip address add address=105.0.0.1/30 comment=To-IX-10 interface=ether1-international network=105.0.0.0
 /ip address add address=202.0.0.1/30 comment=To-IIX-32 interface=ether2-indonesia network=202.0.0.0
 /ip address add address=110.0.0.1/24 comment=To-IP-Adv-110 interface=ae6 network=110.0.0.0
-```
-Virtual Interface
-```
-/interface bonding add mode=802.3ad name=ae6 slaves=ether3 transmit-hash-policy=layer-2-and-3
 ```
 BGP Instance
 ```
