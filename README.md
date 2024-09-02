@@ -124,11 +124,6 @@ BGP Instance
 /routing bgp instance set default disabled=yes
 /routing bgp instance add as=110 name=EBGP-110 router-id=110.0.0.254
 ```
-BGP Peering
-```
-/routing bgp peer add in-filter=international-in instance=EBGP-110 name=PEER-IX out-filter=international-out remote-address=105.0.0.2 remote-as=10
-/routing bgp peer add in-filter=indonesia-in instance=EBGP-110 name=PEER-IIX out-filter=indonesia-out remote-address=202.0.0.2 remote-as=32
-```
 BGP Filter
 ```
 /routing filter add action=accept chain=indonesia-out prefix=110.0.0.0/24
@@ -138,13 +133,18 @@ BGP Filter
 /routing filter add action=accept chain=indonesia-in set-bgp-weight=101
 /routing filter add action=accept chain=international-in set-bgp-weight=100
 ```
-DNS 
+BGP Peering
 ```
-/ip dns set allow-remote-requests=yes servers=110.0.0.1
+/routing bgp peer add in-filter=international-in instance=EBGP-110 name=PEER-IX out-filter=international-out remote-address=105.0.0.2 remote-as=10
+/routing bgp peer add in-filter=indonesia-in instance=EBGP-110 name=PEER-IIX out-filter=indonesia-out remote-address=202.0.0.2 remote-as=32
 ```
 Advertise BGP 
 ```
 /routing bgp network add network=110.0.0.0/24 synchronize=no
+```
+DNS 
+```
+/ip dns set allow-remote-requests=yes servers=110.0.0.1
 ```
 
 
