@@ -107,6 +107,46 @@ Example:
 /routing bgp instance vrf add instance=default routing-mark=VRF-AB redistribute-connected=yes redistribute-static=yes 
 ```
 
+ASBR Example Configuration :
+---------------
+IP Address
+```
+/ip address add address=105.0.0.1/30 comment=To-IX-10 interface=ether1-international network=105.0.0.0
+/ip address add address=202.0.0.1/30 comment=To-IIX-32 interface=ether2-indonesia network=202.0.0.0
+/ip address add address=110.0.0.1/24 comment=To-IP-Adv-110 interface=ae6 network=110.0.0.0
+```
+Virtual Interface
+```
+/interface bonding add mode=802.3ad name=ae6 slaves=ether3 transmit-hash-policy=layer-2-and-3
+```
+BGP Instance
+```
+/routing bgp instance set default disabled=yes
+/routing bgp instance add as=110 name=EBGP-110 router-id=110.0.0.254
+```
+BGP Peering
+```
+/routing bgp peer add in-filter=international-in instance=EBGP-110 name=PEER-IX out-filter=international-out remote-address=105.0.0.2 remote-as=10
+/routing bgp peer add in-filter=indonesia-in instance=EBGP-110 name=PEER-IIX out-filter=indonesia-out remote-address=202.0.0.2 remote-as=32
+```
+BGP Filter
+```
+/routing filter add action=accept chain=indonesia-out prefix=110.0.0.0/24
+/routing filter add action=discard chain=indonesia-out
+/routing filter add action=accept chain=international-out prefix=110.0.0.0/24 set-bgp-prepend=2
+/routing filter add action=discard chain=international-out
+/routing filter add action=accept chain=indonesia-in set-bgp-weight=101
+/routing filter add action=accept chain=international-in set-bgp-weight=100
+```
+DNS 
+```
+/ip dns set allow-remote-requests=yes servers=110.0.0.1
+```
+Advertise BGP 
+```
+/routing bgp network add network=110.0.0.0/24 synchronize=no
+```
+
 
 
 
